@@ -1,0 +1,31 @@
+@font-face {
+    font-family: "Marianne";
+    font-display: block;
+    font-style: normal;
+    font-weight: 400;
+    src: url("Marianne-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Marianne";
+    font-display: block;
+    font-style: normal;
+    font-weight: 700;
+    src: url("Marianne-Bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Marianne";
+    font-display: block;
+    font-style: normal;
+    font-weight: 900;
+    src: url("Marianne-ExtraBold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Permanent Marker";
+    font-display: block;
+    font-style: normal;
+    font-weight: normal;
+    src: url("PermanentMarker-Regular.ttf") format("truetype");
+}

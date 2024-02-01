@@ -1,0 +1,105 @@
+#nav-tab-content {
+    align-self: center !important;
+}
+
+@media (min-width: 768px) {
+    #nav {
+        flex-direction: row !important;
+    }
+
+    #nav-tab {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+
+        flex-direction: column;
+    }
+
+    #nav-tab-content {
+        align-self: unset !important;
+    }
+}
+
+/* Home */
+#logo {
+    width: 15em;
+    height: 15em;
+
+    filter: drop-shadow(var(--bs-box-shadow));
+}
+
+#authors {
+    font-size: 1.2em;
+}
+
+#authors span {
+    font-family: var(--theme-font);
+}
+
+/* Color */
+#color-grid>div {
+    width: 11em;
+}
+
+#color-grid>div>div {
+    position: relative;
+
+    width: 8em;
+    height: 8em;
+}
+
+#color-grid p {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    margin-bottom: 0;
+
+    width: 100%;
+}
+
+/* Typography */
+.typography-glyph {
+    counter-reset: glyph;
+}
+
+.typography-glyph span::before {
+    position: absolute;
+    left: .2em;
+    bottom: .2em;
+
+    counter-increment: glyph;
+    content: counter(glyph);
+
+    font-size: .25em;
+    font-family: var(--normal-font);
+}
+
+.typography-glyph span {
+    display: inline-block;
+
+    position: relative;
+
+    margin: .5px;
+
+    width: 1.6em;
+    height: 1.6em;
+
+    font-size: 3em;
+    text-align: center;
+
+    border-radius: .05em;
+
+    background-color: var(--dark-theme-color);
+
+    box-shadow: 0 0 0 1px #5f5f5f;
+}
+
+.typography-lorem {
+    font-size: 1.2em;
+    text-align: justify;
+}
+
+/* Component */
+.component {
+    max-width: 30em;
+}

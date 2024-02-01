@@ -1,0 +1,186 @@
+:root {
+    /* Font */
+    --normal-font: "Marianne";
+    --theme-font: "Permanent Marker";
+
+    --bs-font-sans-serif: var(--normal-font);
+
+    /* Color */
+    --primary-theme-color: #d82454;
+    --primary-theme-rgb: 216, 36, 85;
+    --primary-theme-subtle-color: #902544;
+    --secondary-theme-color: #4ab7ae;
+    --secondary-theme-rgb: 74, 183, 174;
+    --secondary-theme-subtle-color: #305353;
+    --light-theme-color: #f0ecdf;
+    --light-theme-rgb: 240, 236, 223;
+    --dark-theme-color: #25282b;
+    --dark-theme-rgb: 37, 40, 43;
+
+    --bs-body-bg: var(--dark-theme-color);
+    --bs-body-bg-rgb: var(--dark-theme-rgb);
+    --bs-body-color: var(--light-theme-color);
+    --bs-body-color-rgb: var(--light-theme-rgb);
+
+    --bs-primary: var(--primary-theme-color);
+    --bs-secondary: var(--secondary-theme-color);
+    --bs-light: var(--light-theme-color);
+    --bs-dark: var(--dark-theme-color);
+
+    --bs-primary-color: var(--primary-theme-color);
+    --bs-primary-rgb: var(--primary-theme-rgb);
+    --bs-secondary-color: var(--secondary-theme-color);
+    --bs-secondary-rgb: var(--secondary-theme-rgb);
+    --bs-light-color: var(--light-theme-color);
+    --bs-light-rgb: var(--light-theme-rgb);
+    --bs-dark-color: var(--dark-theme-color);
+    --bs-dark-rgb: var(--dark-theme-rgb);
+
+    --bs-primary-bg-subtle: var(--primary-theme-subtle-color);
+    --bs-secondary-bg-subtle: var(--secondary-theme-subtle-color);
+
+    --bs-link-color: var(--secondary-theme-color);
+    --bs-link-color-rgb: var(--secondary-theme-rgb);
+    --bs-link-hover-color: var(--primary-theme-color);
+    --bs-link-hover-color-rgb: var(--primary-theme-rgb);
+
+    --bs-emphasis-color: var(--primary-theme-color);
+
+    /* Shadow */
+    --bs-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+    --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+    --bs-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    /* Border */
+    --bs-border-width: .15em;
+    --bs-border-color: var(--light-theme-color);
+
+    --bs-primary-border-subtle: var(--primary-theme-subtle-color);
+    --bs-secondary-border-subtle: var(--secondary-theme-subtle-color);
+}
+
+h1 {
+    font-family: var(--theme-font);
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+}
+
+h1 {
+    text-shadow: -.1em .1em 0 var(--secondary-theme-color), -.2em .2em 0 var(--primary-theme-color);
+}
+
+.nav {
+    --bs-link-color: var(--light-theme-color);
+}
+
+.nav-pills {
+    --bs-nav-pills-link-active-bg: var(--primary-theme-subtle-color);
+    --bs-nav-pills-link-active-color: var(--light-theme-color);
+}
+
+*:focus-visible {
+    border-radius: var(--bs-border-radius);
+
+    outline: var(--bs-border-width) solid var(--primary-theme-color) !important;
+    outline-offset: .2em !important;
+}
+
+pre {
+    border-radius: var(--bs-border-radius);
+}
+
+/* Form */
+.form-control::placeholder {
+    color: rgb(var(--light-theme-rgb), .75);
+}
+
+:is(.form-control, .btn):focus-visible {
+    border-color: var(--bs-btn-bg);
+
+    box-shadow: none;
+}
+
+.form-check-input {
+    margin-top: .15em;
+
+    width: 1.2em;
+    height: 1.2em;
+
+    border-color: var(--secondary-theme-color);
+}
+
+.form-check-input:checked[type="checkbox"] {
+    --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23f0ecdf' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+
+.form-check-input:checked {
+    background-color: var(--secondary-theme-subtle-color);
+
+    border-color: var(--secondary-theme-subtle-color);
+}
+
+.form-check-input:focus {
+    border-color: var(--secondary-theme-color);
+
+    box-shadow: none;
+}
+
+.btn-primary {
+    --bs-btn-color: var(--light-theme-color);
+    --bs-btn-bg: var(--primary-theme-subtle-color);
+    --bs-btn-border-color: #0000;
+    --bs-btn-hover-color: var(--light-theme-color);
+    --bs-btn-hover-bg: var(--primary-theme-subtle-color);
+    --bs-btn-hover-border-color: var(--primary-theme-color);
+    --bs-btn-active-color: var(--light-theme-color);
+    --bs-btn-active-bg: var(--primary-theme-color);
+    --bs-btn-active-border-color: var(--primary-theme-color);
+}
+
+.btn-secondary {
+    --bs-btn-color: var(--light-theme-color);
+    --bs-btn-bg: var(--secondary-theme-subtle-color);
+    --bs-btn-border-color: #0000;
+    --bs-btn-hover-color: var(--light-theme-color);
+    --bs-btn-hover-bg: var(--secondary-theme-subtle-color);
+    --bs-btn-hover-border-color: var(--secondary-theme-color);
+    --bs-btn-active-color: var(--light-theme-color);
+    --bs-btn-active-bg: var(--secondary-theme-color);
+    --bs-btn-active-border-color: var(--secondary-theme-color);
+}
+
+/* Film Card */
+.film-card {
+    width: 12em;
+}
+
+.film-card,
+.film-card img {
+    border-top-right-radius: calc(1em + var(--bs-border-width));
+}
+
+.film-card button {
+    height: 2.5em;
+    width: 2.5em;
+
+    translate: calc(-100% + var(--bs-border-width)) calc(-1 * var(--bs-border-width));
+}
+
+.film-card button svg {
+    fill: var(--dark-theme-color);
+
+    transition: .2s ease-in-out fill, .2s ease-in-out filter;
+}
+
+.film-card button.active svg {
+    fill: var(--light-theme-color);
+
+    filter: drop-shadow(0 0 .1em rgba(var(--dark-theme-rgb), .2));
+}
