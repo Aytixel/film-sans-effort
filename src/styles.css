@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+
+@font-face {
+    font-family: "Marianne";
+    font-display: block;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/assets/font/Marianne-Regular.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Marianne";
+    font-display: block;
+    font-style: normal;
+    font-weight: 700;
+    src: url("/assets/font/Marianne-Bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Marianne";
+    font-display: block;
+    font-style: normal;
+    font-weight: 900;
+    src: url("/assets/font/Marianne-ExtraBold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Permanent Marker";
+    font-display: block;
+    font-style: normal;
+    font-weight: normal;
+    src: url("/assets/font/PermanentMarker-Regular.ttf") format("truetype");
+}
