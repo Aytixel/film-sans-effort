@@ -16,4 +16,5 @@ import { CardListComponent } from './components/card-list/card-list.component';
 })
 export class AppComponent {
   recommendationTitle = 'Recommandation';
+  favoritesTitle = 'Favoris';
 }
