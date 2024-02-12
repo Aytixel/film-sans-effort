@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CardComponent } from "../card/card.component";
 
 @Component({
   selector: 'app-card-list',
   standalone: true,
-  imports: [],
   templateUrl: './card-list.component.html',
-  styleUrl: './card-list.component.css'
+  styleUrl: './card-list.component.css',
+  imports: [CardComponent]
 })
 export class CardListComponent {
-
+  @Input() title = '';
 }
