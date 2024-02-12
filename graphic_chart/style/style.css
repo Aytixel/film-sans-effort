@@ -73,7 +73,7 @@ h6 {
 }
 
 h1 {
-    text-shadow: -.1em .1em 0 var(--secondary-theme-color), -.2em .2em 0 var(--primary-theme-color);
+    text-shadow: -.05em .05em 0 var(--secondary-theme-color), -.1em .1em 0 var(--primary-theme-color);
 }
 
 .nav {
