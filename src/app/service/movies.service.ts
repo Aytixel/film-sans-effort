@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,8 @@ export class MoviesService {
   url: string;
   apiKey: string;
   language: string;
+  private data = new BehaviorSubject("")
+  currentData = this.data.asObservable();
 
   constructor(private http: HttpClient) {
     console.log('Charge MoviesService...');

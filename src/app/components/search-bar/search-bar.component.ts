@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MoviesService } from '../../service/movies.service';
+import { Film } from '../film';
 
 @Component({
   selector: 'app-search-bar',
@@ -10,13 +11,14 @@ import { MoviesService } from '../../service/movies.service';
 })
 export class SearchBarComponent {
 
-  searchRes: any;
+  @Output() onSearch = new EventEmitter<Film[]>();
 
   constructor(private _moviesService: MoviesService) { }
 
   searchMovies(event: any) {
     this._moviesService.searchMovies(event.target.value).subscribe(res => {
-      this.searchRes = res.results;
+      // Récupération des id: number, title: string, image: string et favori: boolean ( false par défaut ) de chaque film
+      this.onSearch.emit(res.results.map((film: { id: number; title: string; poster_path: string; }) => new Film(film.id, film.title, film.poster_path, false)));
     });
   }
 
