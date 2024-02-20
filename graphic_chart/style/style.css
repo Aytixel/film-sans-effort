@@ -163,6 +163,8 @@ pre {
 
 .film-card,
 .film-card img {
+    aspect-ratio: 2 / 3;
+
     border-top-right-radius: calc(1em + var(--bs-border-width));
 }
 
