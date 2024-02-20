@@ -1,4 +1,5 @@
 <div class="form-floating">
-    <input id="search-bar" type="email" class="form-control" placeholder="Recherche" />
+    <input id="search-bar" type="email" class="form-control" placeholder="Recherche"
+        (keyup.enter)="searchMovies($event)" />
     <label for="search-bar" class="form-label">Recherche</label>
 </div>
