@@ -16,13 +16,12 @@ import { Film } from './components/film';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  recommendationTitle = 'Recommandation';
+  searchTitle = 'Recherche';
   favoritesTitle = 'Favoris';
 
   searchFilmList: Film[] = [];
 
   setSearchFilmList(filmList: Film[]) {
     this.searchFilmList = filmList;
-    console.log(this.searchFilmList);
   }
 }
