@@ -1,11 +1,13 @@
 export class Film {
-    id: string;
+    id: number;
     title: string;
     image: string;
+    favori: boolean;
 
-    constructor(id: string, title: string, image: string) {
+    constructor(id: number, title: string, image: string, favori: boolean = false) {
         this.id = id;
         this.title = title;
         this.image = image;
+        this.favori = favori;
     }
 }
