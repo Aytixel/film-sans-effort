@@ -17,11 +17,10 @@ import { Film } from './components/film';
 })
 export class AppComponent {
   searchTitle = 'Recherche';
-  favoritesTitle = 'Favoris';
 
-  searchFilmList: Film[] = [];
+  filmList: Film[] = [];
 
-  setSearchFilmList(filmList: Film[]) {
-    this.searchFilmList = filmList;
+  setFilmList(filmList: Film[]) {
+    this.filmList = filmList;
   }
 }
