@@ -39,8 +39,8 @@ async function run() {
         };
 
         // Insérer un document dans la collection
-        const result = await movies.insertOne(movie);
-        console.log(`A document was inserted with the _id: ${result.insertedId}`);
+        //const result = await movies.insertOne(movie);
+        //console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } finally {
         // Ensures that the client will close when you finish/error
         await client.close();
