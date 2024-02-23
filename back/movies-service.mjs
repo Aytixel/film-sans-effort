@@ -11,11 +11,7 @@ export default class MoviesService {
         return (await fetch(`${this.url}search/movie?query=${query}&page=${page}&api_key=${this.apiKey}&language=${this.language}`)).json();
     }
 
-    async getMoviesByGenre(genre) {
-        return (await fetch(`${this.url}genre/${genre}/movies?api_key=${this.apiKey}&language=${this.language}`)).json();
-    }
-
-    async getMovieByStaff(name, page = 1) {
+    async findMovieByStaff(name, page = 1) {
         return (await fetch(`${this.url}search/person?query=${name}&page=${page}&api_key=${this.apiKey}&language=${this.language}`)).json();
     }
 }

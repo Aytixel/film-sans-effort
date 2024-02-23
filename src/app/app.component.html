@@ -1,13 +1,13 @@
 <header class="p-3 sticky-top">
     <h1>Film Sans Effort</h1>
-    <app-search-bar (onSearch)="setSearchFilmList($event)"></app-search-bar>
+    <app-search-bar (onSearch)="setFilmList($event)"></app-search-bar>
 </header>
 <br>
 <br>
 <br>
 <main class="container">
     <div class="row">
-        <app-card-list [title]="searchTitle" [filmList]="searchFilmList"></app-card-list>
+        <app-card-list [title]="searchTitle" [filmList]="filmList"></app-card-list>
     </div>
 </main>
 
