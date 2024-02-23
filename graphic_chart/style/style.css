@@ -168,6 +168,28 @@ pre {
     border-top-right-radius: calc(1em + var(--bs-border-width));
 }
 
+.movie-card img[src=""] {
+    display: none;
+}
+
+.movie-card img+div {
+    display: none;
+
+    aspect-ratio: 2 / 3;
+}
+
+.movie-card img[src=""]+div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.movie-card img+div svg {
+    width: 5em;
+
+    fill: var(--bs-primary-color);
+}
+
 .movie-card button {
     height: 2.5em;
     width: 2.5em;
