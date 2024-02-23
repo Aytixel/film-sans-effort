@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 export default class MoviesService {
     constructor() {
         this.url = 'https://api.themoviedb.org/3/';
-        this.apiKey = process.env['NG_APP_TMDB_API_KEY'];
+        this.apiKey = process.env['TMDB_API_KEY'];
         this.language = 'fr';
     }
 
