@@ -156,32 +156,32 @@ pre {
     --bs-btn-active-border-color: var(--secondary-theme-color);
 }
 
-/* Film Card */
-.film-card {
+/* Movie Card */
+.movie-card {
     width: 12em;
 }
 
-.film-card,
-.film-card img {
+.movie-card,
+.movie-card img {
     aspect-ratio: 2 / 3;
 
     border-top-right-radius: calc(1em + var(--bs-border-width));
 }
 
-.film-card button {
+.movie-card button {
     height: 2.5em;
     width: 2.5em;
 
     translate: calc(-100% + var(--bs-border-width)) calc(-1 * var(--bs-border-width));
 }
 
-.film-card button svg {
+.movie-card button svg {
     fill: var(--dark-theme-color);
 
     transition: .2s ease-in-out fill, .2s ease-in-out filter;
 }
 
-.film-card button.active svg {
+.movie-card button.active svg {
     fill: var(--light-theme-color);
 
     filter: drop-shadow(0 0 .1em rgba(var(--dark-theme-rgb), .2));
