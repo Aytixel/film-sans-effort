@@ -28,11 +28,7 @@ export class MoviesService {
     return this.http.get(`${this.url}genre/${id}/movies?api_key=${this.apiKey}&language=${this.language}`);
   }
 
-  getMovieByActors(id: string): Observable<any> {
-    return this.http.get(`${this.url}search/movie?query=${id}&api_key=${this.apiKey}&language=${this.language}`);
-  }
-
-  getMovieByRealisators(id: string): Observable<any> {
+  getMovieByStaff(id: string): Observable<any> {
     return this.http.get(`${this.url}search/movie?query=${id}&api_key=${this.apiKey}&language=${this.language}`);
   }
 }
