@@ -1,4 +1,5 @@
 <h3 class="mx-3 mt-5">{{title}}</h3>
 <div class="hstack flex-wrap justify-content-between align-items-start mt-4 mb-5">
-    <app-card *ngFor="let film of filmList" [film]="film"></app-card>
+    <app-card *ngFor="let movie of movieList" [movie]="movie"></app-card>
+    <div #listEnd></div>
 </div>

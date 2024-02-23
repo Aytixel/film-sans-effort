@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Film } from '../film';
+import { Movie } from '../movie';
 
 @Component({
   selector: 'app-card',
@@ -9,11 +9,11 @@ import { Film } from '../film';
   styleUrl: './card.component.css'
 })
 export class CardComponent {
-  @Input() film!: Film;
-  @Output() favori = new EventEmitter<Film>();
+  @Input() movie!: Movie;
+  @Output() favori = new EventEmitter<Movie>();
 
   setFavori() {
-    this.film.favori = !this.film.favori
-    this.favori.emit(this.film);
+    this.movie.favori = !this.movie.favori
+    this.favori.emit(this.movie);
   }
 }

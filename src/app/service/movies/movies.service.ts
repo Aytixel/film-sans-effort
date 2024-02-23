@@ -19,9 +19,9 @@ export class MoviesService {
 
   }
 
-  async findMovies(query: string): Promise<any> {
+  async findMovies(query?: string): Promise<any> {
     return new Promise(resolve => {
-      if (this.last_query != query) {
+      if (query && this.last_query != query) {
         this.last_query = query;
         this.page = 1;
 
