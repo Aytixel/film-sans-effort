@@ -12,8 +12,8 @@ export class CardComponent {
   @Input() movie!: Movie;
   @Output() favori = new EventEmitter<Movie>();
 
-  setFavori() {
-    this.movie.favori = !this.movie.favori
+  setFavorite() {
+    this.movie.favorite = !this.movie.favorite
     this.favori.emit(this.movie);
   }
 }

@@ -14,4 +14,10 @@ export default class MoviesService {
     async findMovieByStaff(name, page = 1) {
         return (await fetch(`${this.url}search/person?query=${name}&page=${page}&api_key=${this.apiKey}&language=${this.language}`)).json();
     }
+
+    async getMovieStaff(movie_id) {
+        const staff = await (await fetch(`${this.url}movie/${movie_id}/credits?api_key=${this.apiKey}&language=${this.language}`)).json();
+
+        return staff.cast.concat(staff.crew);
+    }
 }
