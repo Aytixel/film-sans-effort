@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 import MoviesService from "./movies-service.mjs";
+import { getFavoritePipeline } from "./pipeline.mjs";
 
 // .env setup
 dotenv.config();
@@ -43,7 +44,7 @@ app.listen(port, () => {
     console.log('Server is running on port http://localhost:' + port);
 })
 
-async function favorite(req, res, action) {
+async function setFavorite(req, res, action) {
     if (req.query.user_id == null) {
         res.status(400).json({ error: "User id not provided" });
         return;
@@ -68,14 +69,46 @@ async function favorite(req, res, action) {
 }
 
 // ajoute un film en favori
-app.post("/movie/favorite/:movie_id", (req, res) => favorite(req, res, "$addToSet"));
+app.post("/movie/favorite/:movie_id", (req, res) => setFavorite(req, res, "$addToSet"));
 
 // supprime un film des favoris
-app.delete("/movie/favorite/:movie_id", (req, res) => favorite(req, res, "$pull"));
+app.delete("/movie/favorite/:movie_id", (req, res) => setFavorite(req, res, "$pull"));
+
+// récupère les favoris
+app.get("/movie/favorite", async (req, res) => {
+    if (req.query.user_id == null) {
+        res.status(400).json({ error: "User id not provided" });
+        return;
+    }
+
+    try {
+        const pipeline = getFavoritePipeline(new ObjectId(req.query.user_id));
+
+        try {
+            const movies = await user_collection.aggregate(pipeline).toArray();
+
+            res.json(movies.map(movie => ({
+                id: movie._id,
+                title: movie.title,
+                poster: movie.poster,
+                favorite: true,
+            })));
+        } catch {
+            res.status(500).json({ error: "Internal error : query failed" });
+        }
+    } catch {
+        res.status(400).json({ error: "Malformed user id" });
+    }
+});
 
 // recherche un film
 app.get("/movie/find/:query/:page?", async (req, res) => {
     const movies = await api.findMovies(req.params.query, req.params.page);
+    const date = Date.now();
+
+    // filtre les films sortient au cinéma
+    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
+
     const movies_results = movies.results;
 
     try {
@@ -110,11 +143,10 @@ app.get("/movie/find/:query/:page?", async (req, res) => {
             .toArray())
             .forEach(movie => movies_in_db.add(movie._id))
 
-        const date = Date.now();
         const movies_to_insert = await Promise.all(
             movies_results
-                // filtre si les films ont déjà été ajouter et si ils sont sortient au cinéma
-                .filter(movie => !movies_in_db.has(movie.id) && new Date(movie.release_date) < date)
+                // filtre les films déjà été ajouter
+                .filter(movie => !movies_in_db.has(movie.id))
                 // récupère la liste de l'équipe pour le film
                 .map(movie => (async () => ({
                     _id: movie.id,

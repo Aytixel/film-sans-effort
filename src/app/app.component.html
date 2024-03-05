@@ -6,8 +6,12 @@
 <br>
 <br>
 <main class="container">
-    <div *ngIf="movieList.length" class="row">
-        <app-card-list [title]="searchTitle" [movieList]="movieList" (onEndReached)="nextMovies()"></app-card-list>
+    <div *ngIf="searchMovieList.length" class="row">
+        <app-card-list [title]="searchTitle" [movieList]="searchMovieList"
+            (onEndReached)="nextMovies()"></app-card-list>
+    </div>
+    <div *ngIf="favoriteMovieList.length" class="row">
+        <app-card-list [title]="favoriteTitle" [movieList]="favoriteMovieList"></app-card-list>
     </div>
 </main>
 
