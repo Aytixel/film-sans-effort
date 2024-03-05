@@ -53,7 +53,7 @@ async function favorite(req, res, action) {
         const _id = new ObjectId(req.query.user_id);
         const update = {};
 
-        update[action] = { favorite: req.params.movie_id };
+        update[action] = { favorite: +req.params.movie_id };
 
         try {
             await user_collection.updateOne({ _id }, update);

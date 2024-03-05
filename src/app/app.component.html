@@ -6,7 +6,7 @@
 <br>
 <br>
 <main class="container">
-    <div class="row">
+    <div *ngIf="movieList.length" class="row">
         <app-card-list [title]="searchTitle" [movieList]="movieList" (onEndReached)="nextMovies()"></app-card-list>
     </div>
 </main>

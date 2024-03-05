@@ -1,19 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Movie } from '../movie';
+import { FavoriteService } from '../../service/favorite/favorite.service';
 
 @Component({
   selector: 'app-card',
-  standalone: true,
-  imports: [],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
 export class CardComponent {
   @Input() movie!: Movie;
-  @Output() favori = new EventEmitter<Movie>();
+
+  constructor(private favoriteService: FavoriteService) { }
 
   setFavorite() {
-    this.movie.favorite = !this.movie.favorite
-    this.favori.emit(this.movie);
+    this.movie.favorite = !this.movie.favorite;
+    this.movie.favorite = this.favoriteService.setFavorite(this.movie) && this.movie.favorite;
   }
 }

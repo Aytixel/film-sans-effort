@@ -3,13 +3,15 @@ import { RouterOutlet } from '@angular/router';
 import { SearchBarModule } from './components/search-bar/search-bar.module';
 import { Movie } from './components/movie';
 import { FindMoviesService } from './service/find-movies/find-movies.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     SearchBarModule,
-    RouterOutlet
+    RouterOutlet,
+    NgIf,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
