@@ -1,12 +1,8 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { CardComponent } from "../card/card.component";
 import { Movie } from '../movie';
-import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-card-list',
-  standalone: true,
-  imports: [NgFor, CardComponent],
   templateUrl: './card-list.component.html',
   styleUrl: './card-list.component.css'
 })

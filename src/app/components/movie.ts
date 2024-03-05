@@ -1,13 +1,13 @@
 export class Movie {
     id: number;
     title: string;
-    image: string;
+    poster: string;
     favorite: boolean;
 
-    constructor(id: number, title: string, image: string, favori: boolean = false) {
+    constructor(id: number, title: string, poster: string, favori: boolean = false) {
         this.id = id;
         this.title = title;
-        this.image = image;
+        this.poster = poster;
         this.favorite = favori;
     }
 }

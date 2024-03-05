@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 import MoviesService from "./movies-service.mjs";
 
 // .env setup
@@ -35,7 +35,7 @@ const port = 3080;
 
 // application setup
 const api = new MoviesService();
-let movies_in_db = []
+const movies_in_db = new Set();
 
 app.use(cors());
 
@@ -43,47 +43,90 @@ app.listen(port, () => {
     console.log('Server is running on port http://localhost:' + port);
 })
 
-// ajoute un film en favori
-app.post("/movie/favorite/:movie_id", (req, res) => {
-    // pas fini
-    res.status(200);
-});
+async function favorite(req, res, action) {
+    if (req.query.user_id == null) {
+        res.status(400).json({ error: "User id not provided" });
+        return;
+    }
 
-// recherche des films
+    try {
+        const _id = new ObjectId(req.query.user_id);
+        const update = {};
+
+        update[action] = { favorite: req.params.movie_id };
+
+        try {
+            await user_collection.updateOne({ _id }, update);
+
+            res.status(200).end();
+        } catch {
+            res.status(500).json({ error: "User might not exist" });
+        }
+    } catch {
+        res.status(400).json({ error: "Malformed user id" });
+    }
+}
+
+// ajoute un film en favori
+app.post("/movie/favorite/:movie_id", (req, res) => favorite(req, res, "$addToSet"));
+
+// supprime un film des favoris
+app.delete("/movie/favorite/:movie_id", (req, res) => favorite(req, res, "$pull"));
+
+// recherche un film
 app.get("/movie/find/:query/:page?", async (req, res) => {
     const movies = await api.findMovies(req.params.query, req.params.page);
+    const movies_results = movies.results;
+
+    try {
+        if (req.query.user_id == null)
+            throw null;
+
+        // récupère les favoris
+        const favorite = (await user_collection.findOne({ _id: new ObjectId(req.query.user_id) })).favorite;
+
+        movies.results = movies_results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            favorite: favorite.includes(movie.id),
+        }));
+    } catch {
+        movies.results = movies_results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            favorite: false,
+        }));
+    }
 
     res.json(movies);
 
-    // récupère les films déjà dans la base de données
-    movies_in_db = movies_in_db.concat(
+    try {
+        // récupère les films déjà dans la base de données
         (await movie_collection
-            .find({ _id: { $in: movies.results.map(movie => movie.id) } })
-            .project({_id: 1})
+            .find({ _id: { $in: movies_results.map(movie => movie.id) } })
+            .project({ _id: 1 })
             .toArray())
-            .map(movie => movie._id)
-            .filter(id => !movies_in_db.includes(id))
-    );
+            .forEach(movie => movies_in_db.add(movie._id))
 
-    const date = Date.now();
-    const movies_to_insert = await Promise.all(
-        movies.results
-            // filtre si les films ont déjà été ajouter et si ils sont sortient au cinéma
-            .filter(movie => !movies_in_db.includes(movie.id) && new Date(movie.release_date) < date)
-            // récupère la liste de l'équipe pour le film
-            .map(movie => (async () => ({
-                _id: movie.id,
-                title: movie.title,
-                poster: movie.poster_path,
-                staff: (await api.getMovieStaff(movie.id)).map(staff => staff.id)
-            }))())
-    );
+        const date = Date.now();
+        const movies_to_insert = await Promise.all(
+            movies_results
+                // filtre si les films ont déjà été ajouter et si ils sont sortient au cinéma
+                .filter(movie => !movies_in_db.has(movie.id) && new Date(movie.release_date) < date)
+                // récupère la liste de l'équipe pour le film
+                .map(movie => (async () => ({
+                    _id: movie.id,
+                    title: movie.title,
+                    poster: movie.poster_path,
+                    staff: (await api.getMovieStaff(movie.id)).map(staff => staff.id)
+                }))())
+        );
 
-    if (movies_to_insert.length) {
-        try {
+        if (movies_to_insert.length)
             await movie_collection.insertMany(movies_to_insert);
-        } catch (error) {
-            console.error(error);
-        }
+    } catch (error) {
+        console.error(error);
     }
 });
