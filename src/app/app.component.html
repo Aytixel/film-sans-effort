@@ -1,18 +1,13 @@
 <header class="p-3 sticky-top">
     <h1>Film Sans Effort</h1>
-    <app-search-bar (onSearch)="findMovies($event)"></app-search-bar>
+    <app-search-bar></app-search-bar>
 </header>
 <br>
 <br>
 <br>
 <main class="container">
-    <div *ngIf="searchMovieList.length" class="row">
-        <app-card-list [title]="searchTitle" [movieList]="searchMovieList"
-            (onEndReached)="nextMovies()"></app-card-list>
-    </div>
-    <div *ngIf="favoriteMovieList.length" class="row">
-        <app-card-list [title]="favoriteTitle" [movieList]="favoriteMovieList"></app-card-list>
-    </div>
+    <app-search-list></app-search-list>
+    <app-favorite-list></app-favorite-list>
 </main>
 
 <router-outlet />
