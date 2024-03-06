@@ -152,6 +152,7 @@ app.get("/movie/find/:query/:page?", async (req, res) => {
                     _id: movie.id,
                     title: movie.title,
                     poster: movie.poster_path,
+                    genre: movie.genre_ids,
                     staff: (await api.getMovieStaff(movie.id)).map(staff => staff.id)
                 }))())
         );
