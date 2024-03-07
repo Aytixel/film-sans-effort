@@ -8,7 +8,6 @@ import { FavoriteService } from '../favorite/favorite.service';
 @Injectable()
 export class RecommendationService {
   public set$: EventEmitter<Movie[]> = new EventEmitter();
-  public update$: EventEmitter<void> = new EventEmitter();
   
   private url: string = 'http://localhost:3080/';
 
@@ -39,7 +38,7 @@ export class RecommendationService {
     
     if (mostFrequentGenre !== null) {
       const genreMoviesResponse: any = await firstValueFrom(this.http.get(`${this.url}movie/genre/${mostFrequentGenre}`));
-      const genreMovies: Movie[] = genreMoviesResponse.map((rec: any) => new Movie(rec.id, rec.title, rec.poster, rec.genres, rec.favorite));
+      const genreMovies: Movie[] = genreMoviesResponse.map(Movie.mapMovies);
       console.log("genreMovies", genreMovies);
       this.set$.emit(genreMovies);
     } else {
@@ -82,7 +81,7 @@ export class RecommendationService {
 
     if (mostFrequentGenre !== null) {
       const genreMoviesResponse: any = await firstValueFrom(this.http.get(`${this.url}movie/genre/${mostFrequentGenre}`));
-      const genreMovies: Movie[] = genreMoviesResponse.map((rec: any) => new Movie(rec.id, rec.title, rec.poster, rec.genres, rec.favorite));
+      const genreMovies: Movie[] = genreMoviesResponse.map(Movie.mapMovies);
       console.log("genreMovies", genreMovies);
       return genreMovies;
     } else {
