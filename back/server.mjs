@@ -154,7 +154,7 @@ app.get("/movie/:id", async (req, res) => {
     const movieId = req.params.id;
 
     if (!movieId) {
-        res.status(400).json({ error: "ID du film non fourni." });
+        res.json({ error: "ID du film non fourni." });
         return;
     }
 
@@ -162,7 +162,7 @@ app.get("/movie/:id", async (req, res) => {
         const movie = await api.findMovieById(movieId);
 
         if (!movie) {
-            res.status(404).json({ error: "Film non trouvé." });
+            res.json({ error: "Film non trouvé." });
             return;
         }
 
@@ -187,8 +187,7 @@ app.get("/movie/:id", async (req, res) => {
 
         res.json(movieResponse);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Erreur interne lors de la recherche du film." });
+        res.json({ error: "Erreur interne lors de la recherche du film." });
     }
 });
 
