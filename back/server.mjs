@@ -94,6 +94,7 @@ app.get("/movie/favorite", async (req, res) => {
                 id: movie._id,
                 title: movie.title,
                 poster: movie.poster,
+                genre: movie.genre_ids,
                 favorite: true,
             })));
         } catch {
@@ -103,6 +104,94 @@ app.get("/movie/favorite", async (req, res) => {
         res.json({ error: "Id utilisateur non conforme." });
     }
 });
+
+// recherche des film par le genre id ( avec un numéro de page random )
+app.get("/movie/genre/:genreId", async (req, res) => {
+    const genreId = req.params.genreId;
+    // Générer un numéro de page aléatoire entre 1 et 500
+    const page = Math.floor(Math.random() * 500) + 1;
+
+    if (!genreId) {
+        res.status(400).json({ error: "ID du genre non fourni." });
+        return;
+    }
+
+    try {
+        const movies = await api.findMovieByGenreId(genreId, page);
+
+        if (!movies || movies.results.length === 0) {
+            res.status(404).json({ error: "Aucun film trouvé pour ce genre." });
+            return;
+        }
+
+        // Logique pour marquer les films comme favoris si un user_id est fourni
+        let favorites = [];
+        if (req.query.user_id) {
+            try {
+                const user = await user_collection.findOne({ _id: new ObjectId(req.query.user_id) });
+                favorites = user.favorite || [];
+            } catch {
+                // Gérer l'erreur ou ignorer si l'utilisateur n'est pas trouvé
+            }
+        }
+
+        res.json(movies.results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            genre: movie.genre_ids,
+            favorite: favorites.includes(movie.id), // Marque le film comme favori si son ID est dans la liste des favoris
+        })));
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur interne lors de la recherche des films par genre." });
+    }
+});
+
+
+// recherche un film par l'id
+app.get("/movie/:id", async (req, res) => {
+    const movieId = req.params.id;
+
+    if (!movieId) {
+        res.status(400).json({ error: "ID du film non fourni." });
+        return;
+    }
+
+    try {
+        const movie = await api.findMovieById(movieId);
+
+        if (!movie) {
+            res.status(404).json({ error: "Film non trouvé." });
+            return;
+        }
+
+        // Vérifie si le film est en favori
+        let isFavorite = false;
+        if (req.query.user_id) {
+            try {
+                const user = await user_collection.findOne({ _id: new ObjectId(req.query.user_id) });
+                isFavorite = user.favorite.includes(parseInt(movieId));
+            } catch {
+                // Si l'utilisateur n'est pas trouvé ou une autre erreur se produit, isFavorite reste false
+            }
+        }
+
+        const movieResponse = {
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            genre: movie.genres,
+            favorite: isFavorite,
+        };
+
+        res.json(movieResponse);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Erreur interne lors de la recherche du film." });
+    }
+});
+
 
 // recherche un film
 app.get("/movie/find/:query/:page?", async (req, res) => {
