@@ -9,7 +9,9 @@ export class AuthService {
   private user_id: string | null = localStorage.getItem("user_id");
   private username: string | null = localStorage.getItem("username");
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.ping();
+  }
 
   isLoggedIn(): boolean {
     return this.user_id != null;
@@ -75,5 +77,10 @@ export class AuthService {
           this.logout();
       });
     });
+  }
+
+  ping() {
+    if (this.isLoggedIn())
+      this.http.post(`${this.url}auth/ping`, { user_id: this.user_id }).subscribe((res: any) => res?.error != null && this.logout());
   }
 }

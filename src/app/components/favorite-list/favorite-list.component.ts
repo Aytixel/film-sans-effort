@@ -17,6 +17,7 @@ export class FavoriteListComponent implements OnInit {
   
   constructor(private favoriteService: FavoriteService, private authService: AuthService) {
     this.authService.state$.subscribe(async () => {
+      
       this.favoriteMovieList = await this.favoriteService.getFavorites();
     });
 

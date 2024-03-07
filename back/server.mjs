@@ -275,3 +275,17 @@ app.post("/auth/delete", async (req, res) => {
         res.json({ error: "Entrez un mot de passe valide." });
     }
 });
+
+app.post("/auth/ping", async (req, res) => {
+    try {
+        if (typeof req.body?.user_id !== "string")
+            throw undefined;
+        
+        if (await user_collection.countDocuments({ _id: new ObjectId(req.body.user_id) }) == 0)
+            throw undefined;
+
+        res.json({});
+    } catch {
+        res.json({ error: "Itilisateur inexistant." });
+    }
+});
