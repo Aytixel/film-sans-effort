@@ -1,0 +1,104 @@
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-secondary">
+            <div *ngIf="isLoggedIn; then loggeIn; else loggedOut"></div>
+            <ng-template #loggeIn>
+                <div class="modal-header border-0" data-bs-theme="dark">
+                    <h4 class="modal-title" id="authModalLabel">Paramètres</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <button class="btn btn-primary" type="button" (click)="onLogout()">Se déconnecter</button>
+                        </div>
+                        <hr>
+                        <div class="row mb-3">
+                            <button class="btn btn-primary" type="button" (click)="onDelete()">Supprimer le
+                                compte</button>
+                        </div>
+                        <div class="row">
+                            <input #deletePassword type="password" class="form-control" placeholder="Mot de passe"
+                                aria-describedby="authModalParametersDeletePasswordHelp" />
+                            <div id="authModalParametersDeletePasswordHelp" class="form-text">Entrez votre mot de passe
+                                pour confirmer la suppression.</div>
+                            <div class="invalid-tooltip" #deletePasswordTooltip></div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #loggedOut>
+                <div *ngIf="signInModal; then signIn; else signUp"></div>
+                <ng-template #signIn>
+                    <div class="modal-header border-0" data-bs-theme="dark">
+                        <h4 class="modal-title" id="authModalLabel">Connexion</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="container" [formGroup]="signInForm" (ngSubmit)="onSignIn()">
+                            <div class="row form-floating mb-3">
+                                <input #signInUsername id="authSignInUsername" formControlName="authSignInUsername"
+                                    type="text" class="form-control" placeholder="Nom d'utilisateur" required />
+                                <label for="authSignInUsername" class="form-label">Nom d'utilisateur</label>
+                                <div class="invalid-tooltip" #signInUsernameTooltip></div>
+                            </div>
+                            <div class="row form-floating mb-3">
+                                <input #signInPassword id="authSignInPassword" formControlName="authSignInPassword"
+                                    type="password" class="form-control" placeholder="Mot de passe" required />
+                                <label for="authSignInPassword" class="form-label">Mot de passe</label>
+                                <div class="invalid-tooltip" #signInPasswordTooltip></div>
+                            </div>
+                            <br>
+                            <div class="row mb-3">
+                                <button class="btn btn-secondary" type="submit">Se connecter</button>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <button class="btn btn-primary" type="button"
+                                    (click)="signInModal = false">S'inscrire</button>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+                <ng-template #signUp>
+                    <div class="modal-header border-0" data-bs-theme="dark">
+                        <h4 class="modal-title" id="authModalLabel">Inscription</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="container" [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+                            <div class="row form-floating mb-3">
+                                <input #signUpUsername id="authSignUpUsername" formControlName="authSignUpUsername"
+                                    type="text" class="form-control" placeholder="Nom d'utilisateur" required />
+                                <label for="authSignUpUsername" class="form-label">Nom d'utilisateur</label>
+                                <div class="invalid-tooltip" #signUpUsernameTooltip></div>
+                            </div>
+                            <div class="row form-floating mb-3">
+                                <input #signUpPassword id="authSignUpPassword" formControlName="authSignUpPassword"
+                                    type="password" class="form-control" placeholder="Mot de passe" required />
+                                <label for="authSignUpPassword" class="form-label">Mot de passe</label>
+                                <div class="invalid-tooltip" #signUpPasswordTooltip></div>
+                            </div>
+                            <div class="row form-floating mb-3">
+                                <input #signUpPasswordConfirmation id="authSignUpPasswordConfirmation"
+                                    formControlName="authSignUpPasswordConfirmation" type="password"
+                                    class="form-control" placeholder="Confirmation" required />
+                                <label for="authSignUpPasswordConfirmation" class="form-label">Confirmation</label>
+                                <div class="invalid-tooltip" #signUpPasswordConfirmationTooltip></div>
+                            </div>
+                            <br>
+                            <div class="row mb-3">
+                                <button class="btn btn-primary" type="submit">S'inscrire</button>
+                            </div>
+                            <hr>
+                            <div class="row mt-3">
+                                <button class="btn btn-secondary" type="button" (click)="signInModal = true">Se
+                                    connecter</button>
+                            </div>
+                        </form>
+                    </div>
+                </ng-template>
+            </ng-template>
+        </div>
+    </div>
+</div>

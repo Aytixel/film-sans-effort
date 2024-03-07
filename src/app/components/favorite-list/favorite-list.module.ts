@@ -3,6 +3,7 @@ import { FavoriteListComponent } from './favorite-list.component';
 import { FavoriteService } from '../../service/favorite/favorite.service';
 import { NgIf } from '@angular/common';
 import { CardListModule } from '../card-list/card-list.module';
+import { AuthService } from '../../service/auth/auth.service';
 
 
 
@@ -15,6 +16,7 @@ import { CardListModule } from '../card-list/card-list.module';
     NgIf
   ],
   providers: [
+    AuthService,
     FavoriteService
   ],
   exports: [

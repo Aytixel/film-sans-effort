@@ -1,0 +1,11 @@
+:host {
+    width: fit-content;
+    height: fit-content;
+}
+
+button {
+    max-width: 10em;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

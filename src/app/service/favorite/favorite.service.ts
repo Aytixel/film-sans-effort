@@ -28,13 +28,13 @@ export class FavoriteService {
   }
 
   getFavorites(): Promise<Movie[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       if (this.authService.isLoggedIn()) {
         this.http.get(`${this.url}movie/favorite?user_id=${this.authService.getUserId()}`).subscribe((res: any) => {
           resolve(res.map(Movie.mapMovies));
         });
       } else {
-        reject();
+        resolve([]);
       }
     })
   }

@@ -1,9 +1,11 @@
 import dotenv from "dotenv";
 import express from "express";
+import bodyParser from "body-parser";
 import cors from "cors";
 import { MongoClient, ServerApiVersion, ObjectId } from "mongodb";
 import MoviesService from "./movies-service.mjs";
 import { getFavoritePipeline } from "./pipeline.mjs";
+import Password from "./password.mjs";
 
 // .env setup
 dotenv.config();
@@ -39,6 +41,7 @@ const api = new MoviesService();
 const movies_in_db = new Set();
 
 app.use(cors());
+app.use(bodyParser.json())
 
 app.listen(port, () => {
     console.log('Server is running on port http://localhost:' + port);
@@ -46,7 +49,7 @@ app.listen(port, () => {
 
 async function setFavorite(req, res, action) {
     if (req.query.user_id == null) {
-        res.status(400).json({ error: "User id not provided" });
+        res.json({ error: "Id utilisateur non fournit." });
         return;
     }
 
@@ -59,12 +62,12 @@ async function setFavorite(req, res, action) {
         try {
             await user_collection.updateOne({ _id }, update);
 
-            res.status(200).end();
+            res.end();
         } catch {
-            res.status(500).json({ error: "User might not exist" });
+            res.json({ error: "Erreur interne : utilisateur inexistant." });
         }
     } catch {
-        res.status(400).json({ error: "Malformed user id" });
+        res.json({ error: "Id utilisateur non conforme." });
     }
 }
 
@@ -77,7 +80,7 @@ app.delete("/movie/favorite/:movie_id", (req, res) => setFavorite(req, res, "$pu
 // récupère les favoris
 app.get("/movie/favorite", async (req, res) => {
     if (req.query.user_id == null) {
-        res.status(400).json({ error: "User id not provided" });
+        res.json({ error: "Id utilisateur non fournit" });
         return;
     }
 
@@ -94,10 +97,10 @@ app.get("/movie/favorite", async (req, res) => {
                 favorite: true,
             })));
         } catch {
-            res.status(500).json({ error: "Internal error : query failed" });
+            res.json({ error: "Erreur interne : erreur de la requête à la base de données." });
         }
     } catch {
-        res.status(400).json({ error: "Malformed user id" });
+        res.json({ error: "Id utilisateur non conforme." });
     }
 });
 
@@ -161,5 +164,114 @@ app.get("/movie/find/:query/:page?", async (req, res) => {
             await movie_collection.insertMany(movies_to_insert);
     } catch (error) {
         console.error(error);
+    }
+});
+
+app.post("/auth/signin", async (req, res) => {
+    try {
+        const errors = {};
+        let user_id;
+
+        if (typeof req.body?.username === "string" && req.body.username.length) {
+            try {
+                if (await user_collection.countDocuments({ username: req.body.username }) == 0)
+                    errors.username = "Impossible de trouver le nom d''utilisateur.";
+            } catch {
+                errors.username = "Impossible de trouver le nom d''utilisateur.";
+            }
+        } else {
+            errors.username = "Entrez un nom d'utilisateur.";
+        }
+
+        if (typeof req.body?.password === "string" && req.body.password.length > 6) {
+            try {
+                const user = await user_collection.findOne({ username: req.body.username });
+
+                user_id = user._id;
+                
+                if (!await Password.compare(req.body.password, user.password))
+                    errors.password = "Mot de passe incorrect.";
+            } catch {
+                errors.password = "Impossible vérifier le mot de passe.";
+            }
+        } else {
+            errors.password = "Entrez un mot de passe valide.";
+        }
+
+        if (errors.username || errors.password) {
+            res.json({ errors });
+            return;
+        }
+
+        res.json({ user_id });
+    } catch {
+        res.json({ error: "Impossible de trouver l'utilisateur." });
+    }
+});
+
+app.post("/auth/signup", async (req, res) => {
+    try {
+        const errors = {};
+
+        if (typeof req.body?.username === "string" && req.body.username.length) {
+            try {
+                if (await user_collection.countDocuments({ username: req.body.username }) >= 1)
+                    errors.username = "Nom d'utilisateur déjà utiliser.";
+            } catch {
+                errors.username = "Impossible de vérifier si le nom d'utilisateur est déjà utiliser.";
+            }
+        } else {
+            errors.username = "Entrez un nom d'utilisateur.";
+        }
+    
+        if (typeof req.body?.password === "string" && req.body.password.length > 6) {
+            if (!(typeof req.body?.confirmation === "string" && req.body.confirmation == req.body.password))
+                errors.confirmation = "Confirmation du mot de passe incorrect.";
+        } else {
+            errors.password = "Entrez un mot de passe valide.";
+        }
+        
+        if (errors.username || errors.password || errors.confirmation) {
+            res.json({ errors });
+            return;
+        }
+
+        const result = await user_collection.insertOne({
+            username: req.body.username,
+            password: await Password.hash(req.body.password),
+            favorite: []
+        });
+
+        res.json({ user_id: result.insertedId });
+    } catch {
+        res.json({ error: "Impossible de créer l'utilisateur." });
+    }
+});
+
+app.post("/auth/delete", async (req, res) => {
+    if (typeof req.body?.password === "string" && req.body.password.length > 6) {
+        try {
+            if (typeof req.body?.user_id !== "string")
+                throw undefined;
+
+            const _id = new ObjectId(req.body.user_id);
+            const user = await user_collection.findOne({ _id });
+            
+            if (await Password.compare(req.body.password, user.password)) {
+                try {
+                    await user_collection.deleteOne({ _id });
+                } catch {
+                    res.json({ error: "Impossible de supprimer l'utilisateur." });
+                }
+                
+                res.json({});
+            } else {
+                res.json({ error: "Mot de passe incorrect." });
+            }
+        } catch {
+            res.json({ error: "Impossible de trouver l'utilisateur." });
+        }
+    } else {
+        res.json({ error: "Entrez un mot de passe valide." });
     }
 });
