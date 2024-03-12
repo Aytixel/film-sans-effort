@@ -6,6 +6,7 @@ import { SearchBarModule } from './components/search-bar/search-bar.module';
 import { AppComponent } from './app.component';
 import { FavoriteListModule } from './components/favorite-list/favorite-list.module';
 import { RecommendationListModule } from "./components/recommendation-list/recommendation-list.module";
+import { PopularListModule } from './components/popular-list/popular-list.module';
 import { AuthButtonModule } from './components/auth-button/auth-button.module';
 
 
@@ -24,7 +25,8 @@ import { AuthButtonModule } from './components/auth-button/auth-button.module';
         SearchBarModule,
         FavoriteListModule,
         RouterOutlet,
-        RecommendationListModule
+        RecommendationListModule,
+        PopularListModule
     ]
 })
 export class AppModule { }

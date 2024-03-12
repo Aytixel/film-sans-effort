@@ -191,6 +191,42 @@ app.get("/movie/:id", async (req, res) => {
     }
 });
 
+// recherche film populaire
+app.get("/movie/popular/:page?", async (req, res) => {
+    const page = req.params.page || 1;
+
+    try {
+        const movies = await api.findPopularMovie();
+
+        if (!movies || movies.results.length === 0) {
+            res.json({ error: "Aucun film populaire trouvé." });
+            return;
+        }
+
+        // Logique pour marquer les films comme favoris si un user_id est fourni
+        let favorites = [];
+        if (req.query.user_id) {
+            try {
+                const user = await user_collection.findOne({ _id: new ObjectId(req.query.user_id) });
+                favorites = user.favorite || [];
+            } catch {
+                // Gérer l'erreur ou ignorer si l'utilisateur n'est pas trouvé
+            }
+        }
+
+        res.json(movies.results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            genre: movie.genre_ids,
+            favorite: favorites.includes(movie.id), // Marque le film comme favori si son ID est dans la liste des favoris
+        })));
+    } catch (error) {
+        console.error(error);
+        res.json({ error: "Erreur interne lors de la recherche des films populaires." });
+    }
+});
+
 
 // recherche un film
 app.get("/movie/find/:query/:page?", async (req, res) => {
@@ -276,7 +312,7 @@ app.post("/auth/signin", async (req, res) => {
                 const user = await user_collection.findOne({ username: req.body.username });
 
                 user_id = user._id;
-                
+
                 if (!await Password.compare(req.body.password, user.password))
                     errors.password = "Mot de passe incorrect.";
             } catch {
@@ -311,14 +347,14 @@ app.post("/auth/signup", async (req, res) => {
         } else {
             errors.username = "Entrez un nom d'utilisateur.";
         }
-    
+
         if (typeof req.body?.password === "string" && req.body.password.length > 6) {
             if (!(typeof req.body?.confirmation === "string" && req.body.confirmation == req.body.password))
                 errors.confirmation = "Confirmation du mot de passe incorrect.";
         } else {
             errors.password = "Entrez un mot de passe valide.";
         }
-        
+
         if (errors.username || errors.password || errors.confirmation) {
             res.json({ errors });
             return;
@@ -344,14 +380,14 @@ app.post("/auth/delete", async (req, res) => {
 
             const _id = new ObjectId(req.body.user_id);
             const user = await user_collection.findOne({ _id });
-            
+
             if (await Password.compare(req.body.password, user.password)) {
                 try {
                     await user_collection.deleteOne({ _id });
                 } catch {
                     res.json({ error: "Impossible de supprimer l'utilisateur." });
                 }
-                
+
                 res.json({});
             } else {
                 res.json({ error: "Mot de passe incorrect." });
@@ -368,7 +404,7 @@ app.post("/auth/ping", async (req, res) => {
     try {
         if (typeof req.body?.user_id !== "string")
             throw undefined;
-        
+
         if (await user_collection.countDocuments({ _id: new ObjectId(req.body.user_id) }) == 0)
             throw undefined;
 
