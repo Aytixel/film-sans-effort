@@ -193,37 +193,63 @@ app.get("/movie/:id", async (req, res) => {
 
 // recherche film populaire
 app.get("/movie/popular/:page?", async (req, res) => {
-    const page = req.params.page || 1;
+    const movies = await api.findPopularMovie();
+    const date = Date.now();
+
+    // filtre les films sortient au cinéma
+    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
+    const movies_results = movies.results;
+
 
     try {
-        const movies = await api.findPopularMovie();
+        if (req.query.user_id == null)
+            throw null;
 
-        if (!movies || movies.results.length === 0) {
-            res.json({ error: "Aucun film populaire trouvé." });
-            return;
-        }
+        // récupère les favoris
+        const favorite = (await user_collection.findOne({ _id: new ObjectId(req.query.user_id) })).favorite;
 
-        // Logique pour marquer les films comme favoris si un user_id est fourni
-        let favorites = [];
-        if (req.query.user_id) {
-            try {
-                const user = await user_collection.findOne({ _id: new ObjectId(req.query.user_id) });
-                favorites = user.favorite || [];
-            } catch {
-                // Gérer l'erreur ou ignorer si l'utilisateur n'est pas trouvé
-            }
-        }
-
-        res.json(movies.results.map(movie => ({
+        movies.results = movies_results.map(movie => ({
             id: movie.id,
             title: movie.title,
             poster: movie.poster_path,
-            genre: movie.genre_ids,
-            favorite: favorites.includes(movie.id), // Marque le film comme favori si son ID est dans la liste des favoris
-        })));
+            favorite: favorite.includes(movie.id),
+        }));
+    } catch {
+        movies.results = movies_results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            favorite: false,
+        }));
+    }
+    res.json(movies);
+
+    try {
+        // récupère les films déjà dans la base de données
+        (await movie_collection
+            .find({ _id: { $in: movies_results.map(movie => movie.id) } })
+            .project({ _id: 1 })
+            .toArray())
+            .forEach(movie => movies_in_db.add(movie._id))
+
+        const movies_to_insert = await Promise.all(
+            movies_results
+                // filtre les films déjà été ajouter
+                .filter(movie => !movies_in_db.has(movie.id))
+                // récupère la liste de l'équipe pour le film
+                .map(movie => (async () => ({
+                    _id: movie.id,
+                    title: movie.title,
+                    poster: movie.poster_path,
+                    genre: movie.genre_ids,
+                    staff: (await api.getMovieStaff(movie.id)).map(staff => staff.id)
+                }))())
+        );
+
+        if (movies_to_insert.length)
+            await movie_collection.insertMany(movies_to_insert);
     } catch (error) {
         console.error(error);
-        res.json({ error: "Erreur interne lors de la recherche des films populaires." });
     }
 });
 

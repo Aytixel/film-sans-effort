@@ -14,11 +14,12 @@ export class PopularService {
   constructor(private http: HttpClient) { }
 
   async getPopular(): Promise<Movie[]> {
-
-    // Récupérer les films populaires ( app.get("/movie/popular/:page?", async (req, res) => { )
-    const popular: any = await firstValueFrom(this.http.get(`${this.url}movie/popular/1`));
-    const popularMovie: Movie[] = popular.map(Movie.mapMovies);
-    console.log("Film populaire", popularMovie);
-    return popularMovie;
+    const response: any = await firstValueFrom(this.http.get(`${this.url}movie/popular/1`));
+    if (response && Array.isArray(response.results)) {
+      const popularMovies: Movie[] = response.results.map(Movie.mapMovies);
+      console.log("Film populaire", popularMovies);
+      return popularMovies;
+    }
+    return [];
   }
 }
