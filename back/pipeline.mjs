@@ -36,4 +36,4 @@ function getRecommendationPipeline(_id) {
     ]
 }
 
-export { getFavoritePipeline };
+export { getFavoritePipeline, getRecommendationPipeline };

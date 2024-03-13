@@ -14,7 +14,7 @@ export class PopularService {
   constructor(private http: HttpClient) { }
 
   async getPopular(): Promise<Movie[]> {
-    const response: any = await firstValueFrom(this.http.get(`${this.url}movie/popular/1`));
+    const response: any = await firstValueFrom(this.http.get(`${this.url}movie/popular`));
     if (response && Array.isArray(response.results)) {
       const popularMovies: Movie[] = response.results.map(Movie.mapMovies);
       console.log("Film populaire", popularMovies);
