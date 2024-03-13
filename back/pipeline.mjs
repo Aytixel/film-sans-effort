@@ -7,7 +7,7 @@ function getFavoritePipeline(_id) {
     ]
 }
 
-function getRecommandationPipeline(_id) {
+function getRecommendationPipeline(_id) {
     return [
         { $match: { _id } },
         { $lookup: { from: "movie", localField: "favorite", foreignField: "_id", as: "favorite_" } },
