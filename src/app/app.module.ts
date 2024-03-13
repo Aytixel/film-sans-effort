@@ -8,6 +8,7 @@ import { FavoriteListModule } from './components/favorite-list/favorite-list.mod
 import { RecommendationListModule } from "./components/recommendation-list/recommendation-list.module";
 import { PopularListModule } from './components/popular-list/popular-list.module';
 import { AuthButtonModule } from './components/auth-button/auth-button.module';
+import { RecentListModule } from './components/recent-list/recent-list.module';
 
 
 
@@ -26,7 +27,8 @@ import { AuthButtonModule } from './components/auth-button/auth-button.module';
         FavoriteListModule,
         RouterOutlet,
         RecommendationListModule,
-        PopularListModule
+        PopularListModule,
+        RecentListModule
     ]
 })
 export class AppModule { }

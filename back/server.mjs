@@ -47,39 +47,7 @@ app.listen(port, () => {
     console.log('Server is running on port http://localhost:' + port);
 })
 
-// recherche film populaire
-app.get("/movie/popular", async (req, res) => {
-    const movies = await api.findPopularMovie();
-    const date = Date.now();
-
-    // filtre les films sortient au cinéma
-    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
-    const movies_results = movies.results;
-
-
-    try {
-        if (req.query.user_id == null)
-            throw null;
-
-        // récupère les favoris
-        const favorite = (await user_collection.findOne({ _id: new ObjectId(req.query.user_id) })).favorite;
-
-        movies.results = movies_results.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            poster: movie.poster_path,
-            favorite: favorite.includes(movie.id),
-        }));
-    } catch {
-        movies.results = movies_results.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            poster: movie.poster_path,
-            favorite: false,
-        }));
-    }
-    res.json(movies);
-
+async function addUnknownMoviesToDB(movies_results) {
     try {
         // récupère les films déjà dans la base de données
         (await movie_collection
@@ -107,6 +75,77 @@ app.get("/movie/popular", async (req, res) => {
     } catch (error) {
         console.error(error);
     }
+}
+
+async function addFavoriteMovies(user_id, movies_results) {
+    try {
+        if (user_id == null)
+            throw null;
+
+        // récupère les favoris
+        const favorite = (await user_collection.findOne({ _id: new ObjectId(user_id) })).favorite;
+
+        return movies_results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            favorite: favorite.includes(movie.id),
+        }));
+    } catch {
+        return movies_results.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            poster: movie.poster_path,
+            favorite: false,
+        }));
+    }
+}
+
+// recherche film populaire
+app.get("/movie/popular", async (req, res) => {
+    const movies = await api.findPopularMovies();
+    const date = Date.now();
+
+    // filtre les films sortient au cinéma
+    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
+    
+    const movies_results = movies.results;
+
+    res.json(await addFavoriteMovies(req.query.user_id, movies_results));
+
+    addUnknownMoviesToDB(movies_results);
+});
+
+// recherche film récent
+app.get("/movie/recent", async (req, res) => {
+    const movies = await api.findRecentMovies();
+    const date = Date.now();
+
+    // filtre les films sortient au cinéma
+    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
+    
+    const movies_results = movies.results;
+
+    res.json(await addFavoriteMovies(req.query.user_id, movies_results));
+
+    addUnknownMoviesToDB(movies_results);
+});
+
+// recherche un film
+app.get("/movie/find/:query/:page?", async (req, res) => {
+    const movies = await api.findMovies(req.params.query, req.params.page);
+    const date = Date.now();
+
+    // filtre les films sortient au cinéma
+    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
+
+    const movies_results = movies.results;
+
+    movies.results = await addFavoriteMovies(req.query.user_id, movies_results);
+
+    res.json(movies);
+
+    addUnknownMoviesToDB(movies_results);
 });
 
 app.get("/movie/recommendation/:page", async (req, res) => {
@@ -192,69 +231,6 @@ app.get("/movie/favorite", async (req, res) => {
         }
     } catch {
         res.json({ error: "Id utilisateur non conforme." });
-    }
-});
-
-// recherche un film
-app.get("/movie/find/:query/:page?", async (req, res) => {
-    const movies = await api.findMovies(req.params.query, req.params.page);
-    const date = Date.now();
-
-    // filtre les films sortient au cinéma
-    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
-
-    const movies_results = movies.results;
-
-    try {
-        if (req.query.user_id == null)
-            throw null;
-
-        // récupère les favoris
-        const favorite = (await user_collection.findOne({ _id: new ObjectId(req.query.user_id) })).favorite;
-
-        movies.results = movies_results.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            poster: movie.poster_path,
-            favorite: favorite.includes(movie.id),
-        }));
-    } catch {
-        movies.results = movies_results.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            poster: movie.poster_path,
-            favorite: false,
-        }));
-    }
-
-    res.json(movies);
-
-    try {
-        // récupère les films déjà dans la base de données
-        (await movie_collection
-            .find({ _id: { $in: movies_results.map(movie => movie.id) } })
-            .project({ _id: 1 })
-            .toArray())
-            .forEach(movie => movies_in_db.add(movie._id))
-
-        const movies_to_insert = await Promise.all(
-            movies_results
-                // filtre les films déjà été ajouter
-                .filter(movie => !movies_in_db.has(movie.id))
-                // récupère la liste de l'équipe pour le film
-                .map(movie => (async () => ({
-                    _id: movie.id,
-                    title: movie.title,
-                    poster: movie.poster_path,
-                    genre: movie.genre_ids,
-                    staff: (await api.getMovieStaff(movie.id)).map(staff => staff.id)
-                }))())
-        );
-
-        if (movies_to_insert.length)
-            await movie_collection.insertMany(movies_to_insert);
-    } catch (error) {
-        console.error(error);
     }
 });
 

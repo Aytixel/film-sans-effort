@@ -3,6 +3,7 @@ import { RecentListComponent } from './recent-list.component';
 import { RecentService } from '../../service/recent/recent.service';
 import { NgIf } from '@angular/common';
 import { CardListModule } from '../card-list/card-list.module';
+import { AuthService } from '../../service/auth/auth.service';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { CardListModule } from '../card-list/card-list.module';
     NgIf
   ],
   providers: [
-    RecentService
+    RecentService,
+    AuthService,
   ],
   exports: [
     RecentListComponent
