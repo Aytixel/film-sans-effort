@@ -10,7 +10,12 @@ import { FavoriteService } from '../../service/favorite/favorite.service';
 export class CardComponent {
   @Input() movie!: Movie;
 
-  constructor(private favoriteService: FavoriteService) { }
+  constructor(private favoriteService: FavoriteService) {
+    this.favoriteService.set$.subscribe(movie_to_set => {
+      if (movie_to_set.id == this.movie.id)
+        this.movie.favorite = movie_to_set.favorite;
+    });
+  }
 
   setFavorite() {
     this.movie.favorite = !this.movie.favorite;
