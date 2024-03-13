@@ -12,7 +12,11 @@ export default class MoviesService {
     }
 
     async findPopularMovie() {
-        return (await fetch(`${this.url}movie/popular?language=${this.language}&page=1&api_key=890bdf4e08fbd33ff074b380a785cded`)).json();
+        return (await fetch(`${this.url}movie/popular?language=${this.language}&page=1&api_key=${this.apiKey}`)).json();
+    }
+
+    async findRecentMovie() {
+        return (await fetch(`${this.url}movie/now_playing?language=${this.language}&page=1&api_key=${this.apiKey}`)).json();
     }
 
     async findMovieByGenreId(genreId, page) {
