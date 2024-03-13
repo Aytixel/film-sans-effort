@@ -6,13 +6,9 @@ import { FavoriteService } from '../../service/favorite/favorite.service';
 
 @Component({
   selector: 'app-recommendation-list',
-  template: `
-    <div *ngIf="recommendationMovieList.length > 0" class="row">
-        <app-card-list [title]="recommendationTitle" [movieList]="recommendationMovieList" (onEndReached)="nextRecommendation()"></app-card-list>
-    </div>
-  `,
+  templateUrl: './recommendation-list.component.html',
 })
-export class RecommendationListComponent {
+export class RecommendationListComponent implements OnInit {
   recommendationTitle = 'Recommendation';
   recommendationMovieList: Movie[] = [];
 
@@ -21,9 +17,15 @@ export class RecommendationListComponent {
       this.recommendationMovieList = await this.recommendationService.getRecommendations();
     });
 
-    this.favoriteService.set$.subscribe(async () => {
-      this.recommendationMovieList = await this.recommendationService.getRecommendations();
+    this.favoriteService.set$.subscribe(() => {
+      requestAnimationFrame(async () => {
+        this.recommendationMovieList = await this.recommendationService.getRecommendations();
+      });
     });
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   async ngOnInit() {

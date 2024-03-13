@@ -1,0 +1,22 @@
+<div class="row">
+    <div *ngIf="isLoggedIn; then loggeIn; else loggedOut"></div>
+    <ng-template #loggeIn>
+        <div *ngIf="recommendationMovieList.length > 0; then hasMovies; else empty"></div>
+        <ng-template #hasMovies>
+            <app-card-list [title]="recommendationTitle" [movieList]="recommendationMovieList"
+                (onEndReached)="nextRecommendation()"></app-card-list>
+        </ng-template>
+        <ng-template #empty>
+            <h3 class="mx-3 mt-5">{{recommendationTitle}}</h3>
+            <div class="alert alert-secondary text-center mt-5 mb-4 fs-5" role="alert">
+                Ajoutez vos films favoris pour obtenir vos recommandations personnalisées.
+            </div>
+        </ng-template>
+    </ng-template>
+    <ng-template #loggedOut>
+        <div class="alert alert-primary text-center fs-5" role="alert">
+            Connectez-vous où créez un compte et ajoutez vos films favoris pour obtenir vos
+            recommandations personnalisées.
+        </div>
+    </ng-template>
+</div>

@@ -39,6 +39,7 @@ const port = 3080;
 // application setup
 const api = new MoviesService();
 const movies_in_db = new Set();
+const cache = {};
 
 app.use(cors());
 app.use(bodyParser.json())
@@ -101,34 +102,44 @@ async function addFavoriteMovies(user_id, movies_results) {
     }
 }
 
+async function getCache(cache_name, callback) {
+    if (cache[cache_name] != null && cache[cache_name].date >= Date.now())
+        return cache[cache_name].data;
+
+    const data = await callback();
+
+    cache[cache_name] = {
+        data,
+        date: Date.now() + (1000 * 3600),
+    };
+
+    return data;
+}
+
 // recherche film populaire
 app.get("/movie/popular", async (req, res) => {
-    const movies = await api.findPopularMovies();
+    const movies = await getCache("popular", async () => await api.findPopularMovies());
     const date = Date.now();
 
     // filtre les films sortient au cinéma
     movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
     
-    const movies_results = movies.results;
+    res.json(await addFavoriteMovies(req.query.user_id, movies.results));
 
-    res.json(await addFavoriteMovies(req.query.user_id, movies_results));
-
-    addUnknownMoviesToDB(movies_results);
+    addUnknownMoviesToDB(movies.results);
 });
 
 // recherche film récent
 app.get("/movie/recent", async (req, res) => {
-    const movies = await api.findRecentMovies();
+    const movies = await getCache("popular", async () => await api.findRecentMovies());
     const date = Date.now();
 
     // filtre les films sortient au cinéma
     movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
     
-    const movies_results = movies.results;
+    res.json(await addFavoriteMovies(req.query.user_id, movies.results));
 
-    res.json(await addFavoriteMovies(req.query.user_id, movies_results));
-
-    addUnknownMoviesToDB(movies_results);
+    addUnknownMoviesToDB(movies.results);
 });
 
 // recherche un film
@@ -291,11 +302,11 @@ app.post("/auth/signup", async (req, res) => {
             errors.username = "Entrez un nom d'utilisateur.";
         }
 
-        if (typeof req.body?.password === "string" && req.body.password.length > 6) {
+        if (typeof req.body?.password === "string" && req.body.password.length >= 6) {
             if (!(typeof req.body?.confirmation === "string" && req.body.confirmation == req.body.password))
                 errors.confirmation = "Confirmation du mot de passe incorrect.";
         } else {
-            errors.password = "Entrez un mot de passe valide.";
+            errors.password = "Entrez un mot de passe valide (minimum 6 caractères).";
         }
 
         if (errors.username || errors.password || errors.confirmation) {
@@ -316,7 +327,7 @@ app.post("/auth/signup", async (req, res) => {
 });
 
 app.post("/auth/delete", async (req, res) => {
-    if (typeof req.body?.password === "string" && req.body.password.length > 6) {
+    if (typeof req.body?.password === "string" && req.body.password.length >= 6) {
         try {
             if (typeof req.body?.user_id !== "string")
                 throw undefined;
@@ -339,7 +350,7 @@ app.post("/auth/delete", async (req, res) => {
             res.json({ error: "Impossible de trouver l'utilisateur." });
         }
     } else {
-        res.json({ error: "Entrez un mot de passe valide." });
+        res.json({ error: "Entrez un mot de passe valide (minimum 6 caractères)." });
     }
 });
 

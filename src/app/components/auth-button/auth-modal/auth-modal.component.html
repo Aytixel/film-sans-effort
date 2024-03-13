@@ -1,8 +1,8 @@
 <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-secondary">
-            <div *ngIf="isLoggedIn; then loggeIn; else loggedOut"></div>
-            <ng-template #loggeIn>
+            <div *ngIf="isLoggedIn; then loggedIn; else loggedOut"></div>
+            <ng-template #loggedIn>
                 <div class="modal-header border-0" data-bs-theme="dark">
                     <h4 class="modal-title" id="authModalLabel">Paramètres</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

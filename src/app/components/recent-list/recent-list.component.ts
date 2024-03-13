@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Movie } from '../movie';
 import { RecentService } from '../../service/recent/recent.service';
 import { AuthService } from '../../service/auth/auth.service';
-import { FavoriteService } from '../../service/favorite/favorite.service';
 
 @Component({
   selector: 'app-recent-list',
@@ -12,11 +11,15 @@ import { FavoriteService } from '../../service/favorite/favorite.service';
     </div>
   `,
 })
-export class RecentListComponent {
+export class RecentListComponent implements OnInit {
   recentTitle = 'Recent';
   recentMovieList: Movie[] = [];
 
-  constructor(private recentService: RecentService) { }
+  constructor(private recentService: RecentService, private authService: AuthService) {
+    this.authService.state$.subscribe(async () => {
+      this.recentMovieList = await this.recentService.getRecent();
+    });
+  }
 
   async ngOnInit() {
     this.recentMovieList = await this.recentService.getRecent();

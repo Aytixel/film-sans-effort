@@ -20,6 +20,7 @@ export class RecommendationService {
       return [];
 
     if (!next) {
+      this.query_result = [];
       this.page = 1;
       this.is_finished = false;
     } else {

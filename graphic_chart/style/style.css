@@ -46,6 +46,9 @@
 
     --bs-emphasis-color: var(--primary-theme-color);
 
+    --bs-primary-text-emphasis: var(--light-theme-color);
+    --bs-secondary-text-emphasis: var(--light-theme-color);
+
     /* Shadow */
     --bs-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
     --bs-box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
@@ -164,7 +167,10 @@ pre {
 .movie-card,
 .movie-card img {
     aspect-ratio: 2 / 3;
+}
 
+.movie-card.show-favorite,
+.movie-card.show-favorite img {
     border-top-right-radius: calc(1em + var(--bs-border-width));
 }
 
@@ -191,10 +197,16 @@ pre {
 }
 
 .movie-card button {
+    display: none;
+
     height: 2.5em;
     width: 2.5em;
 
     translate: calc(-100% + var(--bs-border-width)) calc(-1 * var(--bs-border-width));
+}
+
+.movie-card.show-favorite button {
+    display: block;
 }
 
 .movie-card button svg {
