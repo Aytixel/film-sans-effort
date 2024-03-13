@@ -14,10 +14,9 @@ import { AuthService } from '../../service/auth/auth.service';
 export class FavoriteListComponent implements OnInit {
   favoriteTitle = 'Favoris';
   favoriteMovieList: Movie[] = [];
-  
+
   constructor(private favoriteService: FavoriteService, private authService: AuthService) {
     this.authService.state$.subscribe(async () => {
-      
       this.favoriteMovieList = await this.favoriteService.getFavorites();
     });
 
