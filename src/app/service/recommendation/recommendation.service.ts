@@ -9,18 +9,32 @@ export class RecommendationService {
   public set$: EventEmitter<Movie[]> = new EventEmitter();
 
   private url: string = 'http://localhost:3080/';
+  private query_result: Movie[] = [];
+  private page: number = 1;
+  private is_finished: boolean = false;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  async getRecommendations(): Promise<Movie[]> {
+  async getRecommendations(next: boolean = false): Promise<Movie[]> {
     if (!this.authService.isLoggedIn())
       return [];
 
-    const response: any = await firstValueFrom(this.http.get(`${this.url}movie/recommendation/1?user_id=${this.authService.getUserId()}`));
+    if (!next) {
+      this.page = 1;
+      this.is_finished = false;
+    } else {
+      this.page++;
+    }
 
-    if (response && Array.isArray(response))
-      return response.map(Movie.mapMovies);
+    if (!this.is_finished) {
+      const movies: any = await firstValueFrom(this.http.get(`${this.url}movie/recommendation/${this.page}?user_id=${this.authService.getUserId()}`));
 
-    return [];
+      if (movies.length)
+        this.query_result = this.query_result.concat(movies.map(Movie.mapMovies));
+      else
+        this.is_finished = true;
+    }
+
+    return this.query_result;
   }
 }

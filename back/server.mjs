@@ -154,14 +154,14 @@ app.get("/movie/recommendation/:page", async (req, res) => {
         return;
     }
 
-    if (req.params.page < 1)
+    if (+req.params.page < 1)
         req.params.page = 1;
 
     try {
         const pipeline = getRecommendationPipeline(new ObjectId(req.query.user_id));
 
         try {
-            const movies = await user_collection.aggregate(pipeline).skip((req.params.page - 1) * 20).limit(req.params.page * 20).toArray();
+            const movies = await user_collection.aggregate(pipeline).skip((req.params.page - 1) * 20).limit(20).toArray();
 
             res.json(movies.map(movie => ({
                 id: movie._id,

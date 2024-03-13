@@ -8,7 +8,7 @@ import { FavoriteService } from '../../service/favorite/favorite.service';
   selector: 'app-recommendation-list',
   template: `
     <div *ngIf="recommendationMovieList.length > 0" class="row">
-        <app-card-list [title]="recommendationTitle" [movieList]="recommendationMovieList"></app-card-list>
+        <app-card-list [title]="recommendationTitle" [movieList]="recommendationMovieList" (onEndReached)="nextRecommendation()"></app-card-list>
     </div>
   `,
 })
@@ -28,5 +28,9 @@ export class RecommendationListComponent {
 
   async ngOnInit() {
     this.recommendationMovieList = await this.recommendationService.getRecommendations();
+  }
+
+  async nextRecommendation() {
+    this.recommendationMovieList = await this.recommendationService.getRecommendations(true);
   }
 }
