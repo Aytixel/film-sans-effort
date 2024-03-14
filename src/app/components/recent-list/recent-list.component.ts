@@ -7,7 +7,7 @@ import { AuthService } from '../../service/auth/auth.service';
   selector: 'app-recent-list',
   template: `
     <div *ngIf="recentMovieList.length > 0" class="row">
-        <app-card-list [title]="recentTitle" [movieList]="recentMovieList"></app-card-list>
+        <app-card-carousel [title]="recentTitle" [movieList]="recentMovieList"></app-card-carousel>
     </div>
   `,
 })

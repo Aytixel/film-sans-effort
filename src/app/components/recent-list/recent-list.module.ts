@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RecentListComponent } from './recent-list.component';
 import { RecentService } from '../../service/recent/recent.service';
 import { NgIf } from '@angular/common';
-import { CardListModule } from '../card-list/card-list.module';
 import { AuthService } from '../../service/auth/auth.service';
+import { CardCarouselModule } from '../card-carousel/card-carousel.module';
 
 
 @NgModule({
@@ -11,7 +11,7 @@ import { AuthService } from '../../service/auth/auth.service';
     RecentListComponent
   ],
   imports: [
-    CardListModule,
+    CardCarouselModule,
     NgIf
   ],
   providers: [

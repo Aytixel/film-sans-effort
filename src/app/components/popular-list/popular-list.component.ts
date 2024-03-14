@@ -7,7 +7,7 @@ import { AuthService } from '../../service/auth/auth.service';
   selector: 'app-popular-list',
   template: `
     <div *ngIf="popularMovieList.length > 0" class="row">
-        <app-card-list [title]="popularTitle" [movieList]="popularMovieList"></app-card-list>
+        <app-card-carousel [title]="popularTitle" [movieList]="popularMovieList"></app-card-carousel>
     </div>
   `,
 })

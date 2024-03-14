@@ -162,6 +162,9 @@ pre {
 /* Movie Card */
 .movie-card {
     width: 12em;
+
+    pointer-events: none;
+    user-select: none;
 }
 
 .movie-card,
@@ -203,6 +206,8 @@ pre {
     width: 2.5em;
 
     translate: calc(-100% + var(--bs-border-width)) calc(-1 * var(--bs-border-width));
+
+    pointer-events: all;
 }
 
 .movie-card.show-favorite button {

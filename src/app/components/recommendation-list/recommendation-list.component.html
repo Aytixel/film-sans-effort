@@ -3,8 +3,8 @@
     <ng-template #loggeIn>
         <div *ngIf="recommendationMovieList.length > 0; then hasMovies; else empty"></div>
         <ng-template #hasMovies>
-            <app-card-list [title]="recommendationTitle" [movieList]="recommendationMovieList"
-                (onEndReached)="nextRecommendation()"></app-card-list>
+            <app-card-carousel [title]="recommendationTitle" [movieList]="recommendationMovieList"
+                (onEndReached)="nextRecommendation()"></app-card-carousel>
         </ng-template>
         <ng-template #empty>
             <h3 class="mx-3 mt-5">{{recommendationTitle}}</h3>

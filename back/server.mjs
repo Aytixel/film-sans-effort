@@ -148,9 +148,7 @@ app.get("/movie/find/:query/:page?", async (req, res) => {
     const date = Date.now();
 
     // filtre les films sortient au cinéma
-    movies.results = movies.results.filter(movie => new Date(movie.release_date) < date);
-
-    const movies_results = movies.results;
+    const movies_results = movies.results.filter(movie => new Date(movie.release_date) < date);
 
     movies.results = await addFavoriteMovies(req.query.user_id, movies_results);
 
