@@ -3,17 +3,28 @@
 }
 
 :host>div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) [grid-start] repeat(auto-fit, calc(2rem + 12em)) [grid-end] minmax(0, 1fr);
+    gap: 1.5rem;
+
     position: relative;
 }
 
-:host>div::before {
+.card-carousel {
+    grid-column-start: grid-start;
+    grid-column-end: grid-end;
+}
+
+.card-carousel::before {
     display: block;
 
     position: absolute;
+    top: 0;
+    left: 2.5em;
     z-index: 1;
 
     height: 100%;
-    width: 100%;
+    width: calc(100% - 5em);
 
     content: "";
 
@@ -28,11 +39,11 @@
     align-items: center;
 
     --width: 4em;
-    --margin: 0em;
+    --margin: -6em;
 
     position: absolute;
     top: 0;
-    left: calc(-1 * (var(--width) + var(--margin)));
+    left: calc(var(--width) + var(--margin));
 
     height: 100%;
     width: var(--width);
@@ -48,11 +59,11 @@
 
 .arrow:last-child {
     left: auto;
-    right: calc(-1 * (var(--width) + var(--margin)));
+    right: calc(var(--width) + var(--margin));
 }
 
 .arrow svg {
-    width: 40%;
+    width: 25%;
 
     fill: var(--light-theme-color);
 }

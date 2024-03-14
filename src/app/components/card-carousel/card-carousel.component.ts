@@ -52,6 +52,6 @@ export class CardCarouselComponent implements AfterViewInit, OnChanges {
   }
 
   onArrowClicked(reverse: boolean) {
-    this.card_carousel.nativeElement.scrollBy({ left: this.card_carousel.nativeElement.clientWidth * (reverse ? 1 : -1), behavior: "smooth" })
+    this.card_carousel.nativeElement.scrollBy({ left: (this.card_carousel.nativeElement.clientWidth + 16 * 1.5) * (reverse ? 1 : -1), behavior: "smooth" })
   }
 }
