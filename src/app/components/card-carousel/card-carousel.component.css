@@ -10,15 +10,49 @@
     display: block;
 
     position: absolute;
-    left: 0;
-    z-index: 100;
+    z-index: 1;
 
     height: 100%;
     width: 100%;
 
     content: "";
 
-    box-shadow: inset 0 0 .5em .5em var(--dark-theme-color);
+    box-shadow: inset 0 0 .75em .75em var(--dark-theme-color);
 
     pointer-events: none;
+}
+
+.arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    --width: 4em;
+    --margin: 0em;
+
+    position: absolute;
+    top: 0;
+    left: calc(-1 * (var(--width) + var(--margin)));
+
+    height: 100%;
+    width: var(--width);
+
+    opacity: 0;
+
+    transition: .2s ease-in-out opacity;
+}
+
+.arrow.show {
+    opacity: 1;
+}
+
+.arrow:last-child {
+    left: auto;
+    right: calc(-1 * (var(--width) + var(--margin)));
+}
+
+.arrow svg {
+    width: 40%;
+
+    fill: var(--light-theme-color);
 }
