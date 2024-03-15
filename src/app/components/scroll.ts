@@ -15,8 +15,20 @@ export class Scroll {
     this.__element = element;
     this.__element.style.overflow = "hidden";
 
+    element.addEventListener(
+      "wheel",
+      this.__wheel,
+      { passive: true },
+    );
     element.addEventListener("pointerdown", this.__pointer_start);
   }
+
+  __wheel = (event: any) => {
+    this.__element.style.scrollBehavior = "auto";
+    this.__element.style.scrollSnapType = "none";
+
+    this.apply_scroll(event.deltaX, event.deltaY, event.shiftKey);
+  };
 
   __pointer_start = (event: any) => {
     this.__hold = true;
@@ -103,12 +115,12 @@ export class Scroll {
 
     window.requestAnimationFrame(() => {
       if (this.__orientation == 1) {
-        if (is_wheel) this.__element.scrollLeft += y;
+        if (is_wheel && shift) this.__element.scrollLeft += y;
         this.__element.scrollLeft += x;
       }
       if (this.__orientation == 2) {
+        if (is_wheel && shift) this.__element.scrollTop += x;
         this.__element.scrollTop += y;
-        if (is_wheel) this.__element.scrollTop += x;
       }
       if (this.__orientation == 3) {
         if (is_wheel && shift) {
