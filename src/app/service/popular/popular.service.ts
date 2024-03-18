@@ -8,7 +8,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class PopularService {
-  private url: string = 'http://localhost:3080/';
+  private url: string = '/';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

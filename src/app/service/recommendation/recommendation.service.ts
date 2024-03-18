@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 export class RecommendationService {
   public set$: EventEmitter<Movie[]> = new EventEmitter();
 
-  private url: string = 'http://localhost:3080/';
+  private url: string = '/';
   private query_result: Movie[] = [];
   private page: number = 1;
   private is_finished: boolean = false;

@@ -34,7 +34,7 @@ const user_collection = database.collection("user");
 
 // express setup
 const app = express();
-const port = 3080;
+const port = process.env['PORT'] || 3080;
 
 // application setup
 const api = new MoviesService();
@@ -43,6 +43,7 @@ const cache = {};
 
 app.use(cors());
 app.use(bodyParser.json())
+app.use("/", express.static("dist/film-sans-effort/browser"));
 
 app.listen(port, () => {
     console.log('Server is running on port http://localhost:' + port);

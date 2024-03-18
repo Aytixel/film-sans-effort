@@ -5,7 +5,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 export class AuthService {
   public state$: EventEmitter<undefined> = new EventEmitter();
 
-  private url: string = 'http://localhost:3080/';
+  private url: string = '/';
   private user_id: string | null = localStorage.getItem("user_id");
   private username: string | null = localStorage.getItem("username");
 

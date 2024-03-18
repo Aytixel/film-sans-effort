@@ -7,7 +7,7 @@ import { AuthService } from '../auth/auth.service';
 export class FavoriteService {
   public set$: EventEmitter<Movie> = new EventEmitter();
   
-  private url: string = 'http://localhost:3080/';
+  private url: string = '/';
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

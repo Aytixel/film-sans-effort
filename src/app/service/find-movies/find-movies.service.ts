@@ -7,7 +7,7 @@ import { AuthService } from '../auth/auth.service';
 export class FindMoviesService {
   public update$: EventEmitter<Movie[]> = new EventEmitter();
 
-  private url: string = 'http://localhost:3080/';
+  private url: string = '/';
   private last_query: string = "";
   private query_result: Movie[] = [];
   private page: number = 1;
