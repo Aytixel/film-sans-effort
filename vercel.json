@@ -1,15 +1,8 @@
 {
-    "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "back/server.mjs",
-            "use": "@now/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "back/server.mjs"
+            "source": "/(.*)",
+            "destination": "/"
         }
     ]
 }
