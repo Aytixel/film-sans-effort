@@ -12,7 +12,7 @@ import { AuthService } from '../../service/auth/auth.service';
   `,
 })
 export class RecentListComponent implements OnInit {
-  recentTitle = 'Recent';
+  recentTitle = 'Récent';
   recentMovieList: Movie[] = [];
 
   constructor(private recentService: RecentService, private authService: AuthService) {

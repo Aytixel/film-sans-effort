@@ -12,7 +12,7 @@ import { AuthService } from '../../service/auth/auth.service';
   `,
 })
 export class PopularListComponent implements OnInit {
-  popularTitle = 'Popular';
+  popularTitle = 'Populaire';
   popularMovieList: Movie[] = [];
 
   constructor(private popularService: PopularService, private authService: AuthService) {
