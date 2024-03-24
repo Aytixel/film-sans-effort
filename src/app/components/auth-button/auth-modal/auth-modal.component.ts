@@ -80,6 +80,7 @@ export class AuthModalComponent {
       }
 
       if (!errors?.username && !errors?.password) {
+        // ferme le panneau si il n'y a pas d'erreur
         this.signInForm.reset();
         document.querySelector<HTMLElement>(".modal .btn-close")?.click();
       }
@@ -115,6 +116,7 @@ export class AuthModalComponent {
       }
       
       if (!errors?.username && !errors?.password && !errors?.confirmation) {
+        // ferme le panneau si il n'y a pas d'erreur
         this.signUpForm.reset();
         document.querySelector<HTMLElement>(".modal .btn-close")?.click();
       }

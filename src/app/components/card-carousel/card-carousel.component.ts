@@ -30,8 +30,10 @@ export class CardCarouselComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['movieList']?.firstChange) {
+      // scroll au début du carousel lors du premier chargement de manière instantanée
       requestAnimationFrame(() => this.card_carousel.nativeElement.scrollTo({ left: 0, behavior: "instant" }));
     } else if (changes['movieList']?.previousValue?.length > changes['movieList']?.currentValue?.length) {
+      // scroll au début du carousel lors que la liste de film change
       this.card_carousel.nativeElement.scrollTo({ left: 0, behavior: "smooth" });
     }
 
@@ -39,6 +41,7 @@ export class CardCarouselComponent implements AfterViewInit, OnChanges {
   }
 
   onScroll() {
+    // envoie un évènement quand la fin du carousel est visible
     if (this.card_carousel.nativeElement.scrollLeft > (this.card_carousel.nativeElement.scrollWidth - this.card_carousel.nativeElement.clientWidth * 1.2)) {
       this.onEndReached.emit();
     }
@@ -47,6 +50,7 @@ export class CardCarouselComponent implements AfterViewInit, OnChanges {
   }
 
   updateArrow() {
+    // met à jour si les flèches doivent être afficher ou non
     this.right_arrow?.nativeElement.classList.toggle("show", this.card_carousel.nativeElement.scrollLeft <= (this.card_carousel.nativeElement.scrollWidth - this.card_carousel.nativeElement.clientWidth - 50));
     this.left_arrow?.nativeElement.classList.toggle("show", this.card_carousel.nativeElement.scrollLeft > 50);
   }

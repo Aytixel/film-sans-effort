@@ -24,9 +24,9 @@ export class FavoriteListComponent implements OnInit {
       const movie_index = this.favoriteMovieList.findIndex(movie => movie.id == movie_to_set.id);
 
       if (movie_index < 0)
-        this.favoriteMovieList.push(movie_to_set);
+        this.favoriteMovieList.push(movie_to_set); // ajout du favori à la liste
       else
-        this.favoriteMovieList.splice(movie_index, 1);
+        this.favoriteMovieList.splice(movie_index, 1); // suppression du favori de la liste
     });
   }
 

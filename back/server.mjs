@@ -363,6 +363,6 @@ app.post("/auth/ping", async (req, res) => {
 
         res.json({});
     } catch {
-        res.json({ error: "Itilisateur inexistant." });
+        res.json({ error: "Utilisateur inexistant." });
     }
 });

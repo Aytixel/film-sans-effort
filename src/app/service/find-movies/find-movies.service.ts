@@ -19,6 +19,7 @@ export class FindMoviesService {
     const auth_params = this.authService.isLoggedIn() ? `?user_id=${this.authService.getUserId()}`: "";
 
     if (query && this.last_query != query) {
+      // charge la première page de la nouvelle recherche
       this.last_query = query;
       this.page = 1;
 
@@ -29,6 +30,7 @@ export class FindMoviesService {
         this.update$.emit(this.query_result);
       });
     } else if (this.page < this.total_pages) {
+      // charge la page suivante de la recherche actuelle si la recherche est la même ou aucune recherche n'est fournit
       this.page++;
 
       this.http.get(`${this.url}movie/find/${this.last_query}/${this.page}${auth_params}`).subscribe((res: any) => {

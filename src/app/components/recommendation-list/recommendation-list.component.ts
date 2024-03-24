@@ -18,6 +18,7 @@ export class RecommendationListComponent implements OnInit {
     });
 
     this.favoriteService.set$.subscribe(() => {
+      // ajout d'un délais pour laisser le temps aux favoris de se mettre à jour sur le serveur
       requestAnimationFrame(async () => {
         this.recommendationMovieList = await this.recommendationService.getRecommendations();
       });

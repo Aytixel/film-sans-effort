@@ -15,6 +15,7 @@ export class CardListComponent implements AfterViewInit {
   ngAfterViewInit() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
+        // envoie un évènement quand la fin de la liste est visible
         if (entry.isIntersecting) {
           this.onEndReached.emit();
         }
